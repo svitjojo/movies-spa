@@ -54,8 +54,6 @@ docker run --name movies -p 3000:3000   -e API_URL=http://localhost:8000/api/v1 
 When the container starts, an **entrypoint script** generates `/dist/config.json` containing runtime environment values (like `API_URL`).  
 The React app automatically fetches this file on startup and uses the provided backend URL.
 
-This allows the same image to be reused across environments by simply changing the `docker run` parameters.
-
 ---
 
 ## 📑 Features
