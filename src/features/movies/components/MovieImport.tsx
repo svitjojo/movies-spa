@@ -2,7 +2,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Button } from '@mui/material';
 import * as React from 'react';
 import { useAppDispatch } from '@/app/hooks';
-import { importTxt, list } from '../movies.slice';
+import { importTxt } from '../movies.slice';
 
 export default function MovieImport() {
   const dispatch = useAppDispatch();
@@ -11,9 +11,7 @@ export default function MovieImport() {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
-      await dispatch(importTxt(file)).unwrap();
-
-      dispatch(list({}));
+      await dispatch(importTxt(file));
     } finally {
       e.target.value = '';
     }
