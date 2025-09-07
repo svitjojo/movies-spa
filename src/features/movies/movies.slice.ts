@@ -34,6 +34,15 @@ export const list = createAsyncThunk(
       } as ApiError);
     }
   },
+  {
+    condition: (_, { getState }) => {
+      const state = getState() as RootState;
+      if (state.movies.total === 0) {
+        return false;
+      }
+      return true;
+    },
+  },
 );
 export const show = createAsyncThunk('movies/show', api.showMovie);
 export const create = createAsyncThunk(
@@ -121,6 +130,7 @@ const slice = createSlice({
           s.items = [...s.items, a.payload.data].sort((x, y) =>
             String(x.title).localeCompare(String(y.title), undefined, { sensitivity: 'base' }),
           );
+          s.total = s.total !== null ? ++s.total : 1;
         }
       })
       .addCase(create.rejected, (s, a) => {
