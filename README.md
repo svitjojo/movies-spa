@@ -1,69 +1,67 @@
-# React + TypeScript + Vite
+# 🎬 Movies SPA
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A single-page application for managing a movie collection.  
+Built with **React + Redux Toolkit + TypeScript**, packaged with **Docker** for easy deployment.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Run locally (without Docker)
 
-## Expanding the ESLint configuration
+1. Install dependencies:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+   ```bash
+   npm ci
+   ```
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2. Start the dev server:
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+   ```bash
+   npm run dev
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3. Open [http://localhost:5173](http://localhost:5173) in your browser.  
+   The backend API should be available at the URL specified in `.env`, for example:
+   ```
+   VITE_API_URL=http://localhost:8000/api/v1
+   ```
+
+---
+
+## 🐳 Build and run with Docker
+
+### 1. Build the Docker image
+
+```bash
+docker build -t your_dockerhub_user/movies .
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Run the container
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+docker run --name movies -p 3000:3000   -e API_URL=http://localhost:8000/api/v1   your_dockerhub_user/movies
 ```
+
+- `-p 3000:3000` — exposes the app on port 3000 of your host machine.
+- `-e API_URL=...` — sets the backend API URL (depends on your environment).  
+  Examples:
+  - Local backend: `http://localhost:8000/api/v1`
+  - Network backend: `http://192.168.1.44:8000/api/v1`
+
+---
+
+## ⚙️ Runtime configuration
+
+When the container starts, an **entrypoint script** generates `/dist/config.json` containing runtime environment values (like `API_URL`).  
+The React app automatically fetches this file on startup and uses the provided backend URL.
+
+This allows the same image to be reused across environments by simply changing the `docker run` parameters.
+
+---
+
+## 📑 Features
+
+- Add, edit, and delete movies.
+- View detailed information about a movie.
+- Sort and search (by title, year, or actor).
+
+---
