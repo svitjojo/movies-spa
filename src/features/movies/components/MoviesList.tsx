@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -39,7 +40,7 @@ export default function MoviesList() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const { order, sort, titleQuery, actorQuery, limit, offset } = getParams(params);
-  const { items, status, error } = useAppSelector((s) => s.movies);
+  const { items, status, error, total } = useAppSelector((s) => s.movies);
 
   React.useEffect(() => {
     dispatch(
@@ -116,52 +117,54 @@ export default function MoviesList() {
         </Stack>
 
         {status === 'loading' && <CircularProgress size={24} sx={{ m: 2 }} />}
-
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <HeaderCell label="Title" field="title" />
-              <HeaderCell label="Year" field="year" />
-              <TableCell>Format</TableCell>
-              <TableCell width={120} align="right">
-                Actions
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {items.map((m) => (
-              <TableRow key={m.id} hover>
-                <TableCell>{m.title}</TableCell>
-                <TableCell>{m.year}</TableCell>
-                <TableCell>{m.format}</TableCell>
-                <TableCell align="right">
-                  <Tooltip title="Details">
-                    <IconButton size="small" onClick={() => navigate(`/movies/${m.id}`)}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Edit">
-                    <IconButton size="small" onClick={() => openEdit(m)}>
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete">
-                    <IconButton size="small" color="error" onClick={() => dispatch(remove(m.id))}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
-            {items.length === 0 && status !== 'loading' && (
+        {total ? (
+          <Table size="small">
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={4}>
-                  <Typography>No data</Typography>
+                <HeaderCell label="Title" field="title" />
+                <HeaderCell label="Year" field="year" />
+                <TableCell>Format</TableCell>
+                <TableCell width={120} align="right">
+                  Actions
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {items.map((m) => (
+                <TableRow key={m.id} hover>
+                  <TableCell>{m.title}</TableCell>
+                  <TableCell>{m.year}</TableCell>
+                  <TableCell>{m.format}</TableCell>
+                  <TableCell align="right">
+                    <Tooltip title="Details">
+                      <IconButton size="small" onClick={() => navigate(`/movies/${m.id}`)}>
+                        <VisibilityIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edit">
+                      <IconButton size="small" onClick={() => openEdit(m)}>
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <IconButton size="small" color="error" onClick={() => dispatch(remove(m.id))}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {items.length === 0 && status !== 'loading' && (
+                <TableRow>
+                  <TableCell colSpan={4}>
+                    <Typography>No data</Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        ) : null}
+
         <Stack direction="row" justifyContent="flex-end" gap={5} sx={{ mt: 2 }}>
           <MovieImport />
           <Button startIcon={<AddIcon />} variant="contained" onClick={() => setOpenDialog(true)}>
@@ -174,8 +177,16 @@ export default function MoviesList() {
         open={error?.code === 'FILE_INVALID'}
         autoHideDuration={6000}
         onClose={() => dispatch(clearError())}
-        message={getErrorMessageByCode(error?.code)}
-      />
+      >
+        <Alert
+          onClose={() => dispatch(clearError())}
+          severity="error"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {getErrorMessageByCode(error?.code)}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
