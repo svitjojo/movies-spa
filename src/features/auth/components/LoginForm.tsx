@@ -19,7 +19,9 @@ export default function LoginForm() {
       <Stack spacing={2}>
         <TextField
           label="Email"
+          type="email"
           placeholder="petro@gmail.com"
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           fullWidth
@@ -31,11 +33,12 @@ export default function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           fullWidth
+          required
         />
         <Button type="submit" variant="contained" disabled={status === 'loading'}>
           {status === 'loading' ? 'Signing in…' : 'Login'}
         </Button>
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && <Alert severity="error">Your email or password incorrect</Alert>}
       </Stack>
     </form>
   );

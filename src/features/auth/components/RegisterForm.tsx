@@ -22,17 +22,26 @@ export default function RegisterForm() {
       <Stack spacing={2}>
         <TextField
           label="Email"
+          type="email"
           placeholder="petro@gmail.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
           fullWidth
         />
-        <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
+        <TextField
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          fullWidth
+          required
+        />
         <TextField
           label="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
           fullWidth
         />
         <TextField
@@ -40,12 +49,13 @@ export default function RegisterForm() {
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          required
           fullWidth
         />
         <Button type="submit" variant="contained" disabled={status === 'loading'}>
           {status === 'loading' ? 'Creating…' : 'Register'}
         </Button>
-        {error && <Alert severity="error">{error}</Alert>}
+        {error && <Alert severity="error">Invalid entered values</Alert>}
       </Stack>
     </form>
   );
