@@ -18,12 +18,11 @@ import getErrorMessageByField from '../utils/getErrorMessage';
 const FORMATS = ['VHS', 'DVD', 'Blu-Ray'] as const;
 
 type Props = {
-  open: boolean;
   movie: Movie | null;
   onClose: () => void;
 };
 
-export default function MovieEditDialog({ open, movie, onClose }: Props) {
+export default function MovieEditDialog({ movie, onClose }: Props) {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectMoviesError);
 
@@ -84,7 +83,7 @@ export default function MovieEditDialog({ open, movie, onClose }: Props) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>{movie ? 'Edit movie' : 'Add movie'}</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>

@@ -169,7 +169,7 @@ export default function MoviesList() {
           </Button>
         </Stack>
       </Paper>
-      <MovieDialog open={dialogOpen} movie={editMovie} onClose={closeEdit} />
+      {dialogOpen ? <MovieDialog movie={editMovie} onClose={closeEdit} /> : null}
       <Snackbar
         open={error?.code === 'FILE_INVALID'}
         autoHideDuration={6000}
