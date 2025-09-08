@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
+import { getCookie } from '@/utils/cookie';
 
 let api: AxiosInstance | null = null;
 
@@ -7,7 +8,7 @@ export function initApi(API_URL: string) {
 
   // Attach Authorization automatically
   api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('auth_token');
+    const token = getCookie('auth_token');
     if (token) {
       config.headers.set('Authorization', token);
     }
